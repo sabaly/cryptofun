@@ -2,7 +2,7 @@
 mod challenge_1 {
 
 
-    fn fromhex(ch: char) -> u32{
+    pub fn fromhex(ch: char) -> u32{
         if ch=='a' { 
             return 10 as u32;
         } else if ch=='b' {
@@ -63,7 +63,52 @@ mod challenge_1 {
     }
 }
 
+mod challenge_2 {
+    use crate::challenge_1;
+
+    pub fn tohex(input: u32) -> char {
+        assert!(input<16, "Invalid input !");
+
+        if input <= 9 {
+            return char::from_u32(input + ('0' as u32)).expect("REASON");
+        }
+        if input==10 {
+            return 'a'
+        } else if input==11 {
+            return 'b';
+        } else if input==12 {
+            return 'c';
+        } else if input==13 {
+            return 'd';
+        } else if input==14 {
+            return 'e';
+        } 
+
+        return 'f';
+        
+    }
+
+    pub fn xor(buf1: String, buf2: String) {
+        assert_eq!(buf1.len(), buf2.len());
+        let mut res = String::with_capacity(buf1.len());
+        for i in 0..buf1.len() {
+            let x = challenge_1::fromhex(buf1.as_bytes()[i] as char);
+            let y = challenge_1::fromhex(buf2.as_bytes()[i] as char);
+            let z = x^y;
+            
+            res.push(tohex(z));
+        }
+
+        println!("a: {}\nb: {}\nr: {}", buf1, buf2, res);
+
+    }
+}
 
 fn main() {
+    println!("CHALLENGE1: ");
     challenge_1::hex_to_b64();
+    println!("CHALLENGE2: ");
+    let a = String::from("1c0111001f010100061a024b53535009181c");
+    let b = String::from("686974207468652062756c6c277320657965");
+    challenge_2::xor(a, b);
 }
